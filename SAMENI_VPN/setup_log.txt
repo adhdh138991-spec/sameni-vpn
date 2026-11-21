@@ -1,0 +1,43 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20261119155045
+Username: DESKTOP-C6PO5G4\hp
+RunAs User: DESKTOP-C6PO5G4\hp
+Configuration Name: 
+Machine: DESKTOP-C6PO5G4 (Microsoft Windows NT 10.0.19045.0)
+Host Application: powershell -NoProfile -ExecutionPolicy Bypass -File D:\Users\hp\Downloads\SAMENI_VPN_Android_Ready\SAMENI_VPN\SETUP_AND_BUILD.ps1
+Process ID: 3480
+PSVersion: 5.1.19041.7725
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.19041.7725
+BuildVersion: 10.0.19041.7725
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+=== 1/6 Git and JDK 17 ===
+
+=== 2/6 Flutter SDK ===
+
+=== 3/6 Android SDK ===
+No valid Android SDK found. A fresh SDK will be installed in: D:\AndroidSDK
+Using Android SDK: D:\AndroidSDK
+Downloading Android command-line tools (about 150 MB)...
+PS>TerminatingError(Invoke-WebRequest): "The remote name could not be resolved: 'dl.google.com'"
+Failed (https://dl.google.com/android/repository/commandlinetools-win-15859902_latest.zip): The remote name could not be resolved: 'dl.google.com'
+PS>TerminatingError(Invoke-WebRequest): "The remote name could not be resolved: 'dl.google.com'"
+Failed (https://dl.google.com/android/repository/commandlinetools-win-15859902_latest.zip): The remote name could not be resolved: 'dl.google.com'
+PS>TerminatingError(Invoke-WebRequest): "The remote name could not be resolved: 'dl.google.com'"
+Failed (https://dl.google.com/android/repository/commandlinetools-win-11076708_latest.zip): The remote name could not be resolved: 'dl.google.com'
+PS>TerminatingError(Invoke-WebRequest): "The remote name could not be resolved: 'dl.google.com'"
+Failed (https://dl.google.com/android/repository/commandlinetools-win-11076708_latest.zip): The remote name could not be resolved: 'dl.google.com'
+PS>TerminatingError(Invoke-WebRequest): "The remote name could not be resolved: 'dl.google.com'"
+Failed (https://dl.google.com/android/repository/commandlinetools-win-9477386_latest.zip): The remote name could not be resolved: 'dl.google.com'
+PS>TerminatingError(Invoke-WebRequest): "The remote name could not be resolved: 'dl.google.com'"
+Failed (https://dl.google.com/android/repository/commandlinetools-win-9477386_latest.zip): The remote name could not be resolved: 'dl.google.com'
+
+ERROR: Could not download Android command-line tools.
+Option 1: turn ON VPN and run again.
+Option 2 (no download): open Android Studio > Settings > Languages & Frameworks > Android SDK > SDK Tools tab > tick 'Android SDK Command-line Tools (latest)' > Apply. Then run this script again.
