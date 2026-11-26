@@ -1,5 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  SAMENI VPN - نسخه کامل با انتخاب هوشمند و مدیریت خودکار
+//  SAMENI VPN - نسخه کامل با انتخاب هوشمند
+//  (همه خطاهای analyze رفع شده)
 // ═══════════════════════════════════════════════════════════════════════════
 
 import 'dart:async';
@@ -58,26 +59,62 @@ class DnsPreset {
       );
 }
 
-const List<DnsPreset> kDefaultDns = [
+// ⚠️ final است (نه const) تا خطای const_initialized_with_non_constant_value رفع شود
+final List<DnsPreset> kDefaultDns = [
   DnsPreset(id: 'auto', name: 'خودکار', builtin: true),
-  DnsPreset(id: 'cloudflare', name: 'Cloudflare',
-      primary: '1.1.1.1', secondary: '1.0.0.1', builtin: true),
-  DnsPreset(id: 'google', name: 'Google',
-      primary: '8.8.8.8', secondary: '8.8.4.4', builtin: true),
-  DnsPreset(id: 'quad9', name: 'Quad9',
-      primary: '9.9.9.9', secondary: '149.112.112.112', builtin: true),
-  DnsPreset(id: 'opendns', name: 'OpenDNS',
-      primary: '208.67.222.222', secondary: '208.67.220.220', builtin: true),
-  DnsPreset(id: 'adguard', name: 'AdGuard (بدون تبلیغ)',
-      primary: '94.140.14.14', secondary: '94.140.15.15', builtin: true),
-  DnsPreset(id: 'cloudflare_family', name: 'Cloudflare خانواده',
-      primary: '1.1.1.3', secondary: '1.0.0.3', builtin: true),
-  DnsPreset(id: 'shecan', name: 'شکن (Shecan)',
-      primary: '178.22.122.100', secondary: '185.51.200.2', builtin: true),
-  DnsPreset(id: 'electro', name: 'الکترو (Electro)',
-      primary: '78.157.42.100', secondary: '78.157.42.101', builtin: true),
-  DnsPreset(id: 'doh_cf', name: 'Cloudflare DoH',
-      primary: 'https://cloudflare-dns.com/dns-query', builtin: true),
+  DnsPreset(
+      id: 'cloudflare',
+      name: 'Cloudflare',
+      primary: '1.1.1.1',
+      secondary: '1.0.0.1',
+      builtin: true),
+  DnsPreset(
+      id: 'google',
+      name: 'Google',
+      primary: '8.8.8.8',
+      secondary: '8.8.4.4',
+      builtin: true),
+  DnsPreset(
+      id: 'quad9',
+      name: 'Quad9',
+      primary: '9.9.9.9',
+      secondary: '149.112.112.112',
+      builtin: true),
+  DnsPreset(
+      id: 'opendns',
+      name: 'OpenDNS',
+      primary: '208.67.222.222',
+      secondary: '208.67.220.220',
+      builtin: true),
+  DnsPreset(
+      id: 'adguard',
+      name: 'AdGuard (بدون تبلیغ)',
+      primary: '94.140.14.14',
+      secondary: '94.140.15.15',
+      builtin: true),
+  DnsPreset(
+      id: 'cloudflare_family',
+      name: 'Cloudflare خانواده',
+      primary: '1.1.1.3',
+      secondary: '1.0.0.3',
+      builtin: true),
+  DnsPreset(
+      id: 'shecan',
+      name: 'شکن (Shecan)',
+      primary: '178.22.122.100',
+      secondary: '185.51.200.2',
+      builtin: true),
+  DnsPreset(
+      id: 'electro',
+      name: 'الکترو (Electro)',
+      primary: '78.157.42.100',
+      secondary: '78.157.42.101',
+      builtin: true),
+  DnsPreset(
+      id: 'doh_cf',
+      name: 'Cloudflare DoH',
+      primary: 'https://cloudflare-dns.com/dns-query',
+      builtin: true),
 ];
 
 class ServerItem {
@@ -87,9 +124,6 @@ class ServerItem {
 }
 
 // ───────────────────────── سرورهای پیش‌فرض ─────────────────────────
-// ⚠️ این‌ها فقط برای شروع کار هستن. برای پایداری بلندمدت، از سرور شخصی
-// یا اشتراک معتبر استفاده کن. برنامه وقتی سروری خراب شه خودش سراغ
-// سرور بعدی یا جستجوی خودکار می‌ره.
 const List<ServerItem> kDefaultServers = [
   ServerItem(
     'VLESS-Reality-01',
@@ -175,34 +209,34 @@ const List<String> kSources = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  AppController - مغز برنامه
+//  AppController
 // ═══════════════════════════════════════════════════════════════════════════
 class AppController extends ChangeNotifier {
   late final FlutterV2ray v2ray;
   late SharedPreferences prefs;
 
-  // ═══ تنظیمات ═══
+  // تنظیمات
   String themeMode = 'system';
   String language = 'fa';
-  bool smartSelect = true;         // ✨ انتخاب هوشمند
-  bool autoConnect = false;         // اتصال خودکار در شروع
-  bool autoReconnect = true;        // اتصال مجدد خودکار
-  bool findOnStartup = true;        // جستجوی خودکار
-  bool bypassIran = true;           // عبور ندادن ترافیک ایران
-  bool fragmentEnabled = false;     // Fragment (دور زدن DPI)
-  bool killSwitch = false;          // قطع اینترنت در صورت قطع VPN
+  bool smartSelect = true;
+  bool autoConnect = false;
+  bool autoReconnect = true;
+  bool findOnStartup = true;
+  bool bypassIran = true;
+  bool fragmentEnabled = false;
+  bool killSwitch = false;
   int mtu = 1500;
-  int connectionTimeout = 25;       // ثانیه
-  int healthCheckInterval = 60;     // ثانیه
+  int connectionTimeout = 25;
+  int healthCheckInterval = 60;
   String logLevel = 'warning';
 
-  // ═══ آمار مصرف ═══
+  // آمار
   int totalUp = 0;
   int totalDown = 0;
   int _lastUp = 0;
   int _lastDown = 0;
 
-  // ═══ وضعیت ═══
+  // وضعیت
   bool finding = false;
   bool _cancelFind = false;
   String findStatus = '';
@@ -224,11 +258,12 @@ class AppController extends ChangeNotifier {
   bool busy = false;
   bool ready = false;
 
-  // ═══ وضعیت داخلی ═══
+  // داخلی
   Timer? _healthTimer;
   int _failedChecks = 0;
   bool _wasConnected = false;
   bool _reconnecting = false;
+  bool mounted = true;
 
   bool get connected => status.state == 'CONNECTED';
   bool get connecting => status.state == 'CONNECTING' || busy;
@@ -254,21 +289,20 @@ class AppController extends ChangeNotifier {
     ready = true;
     notifyListeners();
 
-    // سرورهای پیش‌فرض در اولین نصب
     if (servers.isEmpty) {
       for (final s in kDefaultServers) {
         servers.add(s);
       }
-      if (servers.isNotEmpty) selectedServer = 0;
+      if (servers.isNotEmpty) {
+        selectedServer = 0;
+      }
       await _save();
     }
 
-    // جستجوی خودکار در شروع
     if (findOnStartup && servers.length <= kDefaultServers.length) {
       findServers();
     }
 
-    // اتصال خودکار در شروع
     if (autoConnect && servers.isNotEmpty) {
       Future.delayed(const Duration(seconds: 2), () async {
         if (!connected && !busy && mounted) {
@@ -278,8 +312,6 @@ class AppController extends ChangeNotifier {
     }
   }
 
-  bool mounted = true;
-
   @override
   void dispose() {
     mounted = false;
@@ -287,22 +319,31 @@ class AppController extends ChangeNotifier {
     super.dispose();
   }
 
+  // ═══════════════ _onStatus - با آکولاد کامل ═══════════════
   void _onStatus(V2RayStatus s) {
     status = s;
     if (s.state == 'CONNECTED') {
       busy = false;
       _wasConnected = true;
       _failedChecks = 0;
-      // آمار مصرف
-      if (s.upload >= _lastUp) totalUp += s.upload - _lastUp;
-      else totalUp += s.upload;
-      if (s.download >= _lastDown) totalDown += s.download - _lastDown;
-      else totalDown += s.download;
+      // آمار مصرف - با آکولاد
+      if (s.upload >= _lastUp) {
+        totalUp += s.upload - _lastUp;
+      } else {
+        totalUp += s.upload;
+      }
+      if (s.download >= _lastDown) {
+        totalDown += s.download - _lastDown;
+      } else {
+        totalDown += s.download;
+      }
       _lastUp = s.upload;
       _lastDown = s.download;
       // speed history
       speedHistory.add(s.downloadSpeed);
-      if (speedHistory.length > 40) speedHistory.removeAt(0);
+      if (speedHistory.length > 40) {
+        speedHistory.removeAt(0);
+      }
       // health check
       _startHealthCheck();
     } else if (s.state == 'DISCONNECTED') {
@@ -318,7 +359,7 @@ class AppController extends ChangeNotifier {
         dnsOnlyActive = false;
         speedHistory.clear();
       }
-      // اتصال مجدد در صورت قطع ناخواسته
+      // اتصال مجدد
       if (wasConnected && autoReconnect && !_reconnecting && mounted) {
         _attemptReconnect();
       }
@@ -326,7 +367,7 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ═══════════════ بارگذاری و ذخیره ═══════════════
+  // ═══════════════ بارگذاری / ذخیره ═══════════════
   void _load() {
     try {
       final s = prefs.getString('servers');
@@ -408,7 +449,9 @@ class AppController extends ChangeNotifier {
 
   Future<void> setSmartSelect(bool v) async {
     smartSelect = v;
-    if (v) await smartSelectBest();
+    if (v) {
+      await smartSelectBest();
+    }
     await _save();
     notifyListeners();
   }
@@ -433,14 +476,18 @@ class AppController extends ChangeNotifier {
 
   Future<void> setBypassIran(bool v) async {
     bypassIran = v;
-    if (v) killSwitch = false; // با هم تناقض دارن
+    if (v) {
+      killSwitch = false;
+    }
     await _save();
     notifyListeners();
   }
 
   Future<void> setKillSwitch(bool v) async {
     killSwitch = v;
-    if (v) bypassIran = false;
+    if (v) {
+      bypassIran = false;
+    }
     await _save();
     notifyListeners();
   }
@@ -494,7 +541,8 @@ class AppController extends ChangeNotifier {
   String exportSettings() {
     return const JsonEncoder.withIndent('  ').convert({
       'version': 1,
-      'servers': servers.map((e) => {'name': e.name, 'link': e.link}).toList(),
+      'servers':
+          servers.map((e) => {'name': e.name, 'link': e.link}).toList(),
       'custom_dns': customDns.map((e) => e.toJson()).toList(),
       'custom_sources': customSources,
       'settings': {
@@ -522,8 +570,8 @@ class AppController extends ChangeNotifier {
       final j = jsonDecode(text) as Map<String, dynamic>;
       if (j['servers'] is List) {
         servers = (j['servers'] as List)
-            .map((e) => ServerItem(
-                (e['name'] ?? 'Server').toString(), (e['link'] ?? '').toString()))
+            .map((e) => ServerItem((e['name'] ?? 'Server').toString(),
+                (e['link'] ?? '').toString()))
             .where((e) => e.link.isNotEmpty)
             .toList();
       }
@@ -632,7 +680,6 @@ class AppController extends ChangeNotifier {
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
       if (!connected && !busy) {
-        // اگه سرور فعلی خرابه، برو بعدی
         final s = currentServer;
         String? err;
         if (s != null) {
@@ -643,7 +690,6 @@ class AppController extends ChangeNotifier {
             err = 'invalid';
           }
         }
-        // اگه شکست خورد، جستجو و انتخاب مجدد
         if (err != null && smartSelect) {
           await findServers();
           await smartSelectBest();
@@ -687,11 +733,9 @@ class AppController extends ChangeNotifier {
       _applyDns(cfg, currentDns);
     }
 
-    // مسیریابی
     final routing = Map<String, dynamic>.from((cfg['routing'] as Map?) ?? {});
     final rules = List<dynamic>.from((routing['rules'] as List?) ?? []);
 
-    // اطمینان از وجود direct outbound
     final outs = List<dynamic>.from((cfg['outbounds'] as List?) ?? []);
     final hasDirect = outs.any((o) => o is Map && o['tag'] == 'direct');
     if (!hasDirect) {
@@ -703,7 +747,6 @@ class AppController extends ChangeNotifier {
       cfg['outbounds'] = outs;
     }
 
-    // bypass Iran
     if (bypassIran && !killSwitch) {
       routing['domainStrategy'] = 'IPIfNonMatch';
       if (!rules.any((r) =>
@@ -718,7 +761,6 @@ class AppController extends ChangeNotifier {
       }
     }
 
-    // Kill switch: حذف direct از قوانین و از outbounds
     if (killSwitch) {
       rules.removeWhere((r) => r is Map && r['outboundTag'] == 'direct');
       cfg['outbounds'] = (cfg['outbounds'] as List)
@@ -729,13 +771,12 @@ class AppController extends ChangeNotifier {
     routing['rules'] = rules;
     cfg['routing'] = routing;
 
-    // Fragment (DPI bypass)
     if (fragmentEnabled) {
       final inbounds = List<dynamic>.from((cfg['inbounds'] as List?) ?? []);
       for (final inb in inbounds) {
         if (inb is Map) {
-          final sniff = Map<String, dynamic>.from(
-              (inb['sniffing'] as Map?) ?? {});
+          final sniff =
+              Map<String, dynamic>.from((inb['sniffing'] as Map?) ?? {});
           sniff['enabled'] = true;
           sniff['destOverride'] = ['http', 'tls'];
           sniff['routeOnly'] = true;
@@ -806,7 +847,6 @@ class AppController extends ChangeNotifier {
         bypassSubnets: null,
         blockedApps: null,
       );
-      // timeout
       Future.delayed(Duration(seconds: connectionTimeout), () {
         if (mounted && busy && !connected) {
           busy = false;
@@ -838,7 +878,6 @@ class AppController extends ChangeNotifier {
 
     ServerItem? s = currentServer;
 
-    // انتخاب هوشمند
     if (smartSelect) {
       final best = _findBestServer();
       if (best != null) {
@@ -849,7 +888,6 @@ class AppController extends ChangeNotifier {
     }
 
     if (s == null) {
-      // اگه هیچ سروری نیست، جستجو کن
       if (smartSelect) {
         await findServers();
         s = _findBestServer() ?? currentServer;
@@ -861,7 +899,6 @@ class AppController extends ChangeNotifier {
     try {
       cfg = _buildConfig(s.link);
     } catch (_) {
-      // سرور خرابه، برو بعدی
       if (smartSelect) {
         return _tryNextServerConnect();
       }
@@ -870,8 +907,8 @@ class AppController extends ChangeNotifier {
     return _start(s.name, cfg, dnsOnly: false);
   }
 
+  // ═══════════════ _tryNextServerConnect - با await ═══════════════
   Future<String?> _tryNextServerConnect() async {
-    // مرتب‌سازی بر اساس پینگ
     final candidates = <MapEntry<ServerItem, int>>[];
     for (final s in servers) {
       final p = pings[s.link];
@@ -885,7 +922,8 @@ class AppController extends ChangeNotifier {
         final cfg = _buildConfig(c.key.link);
         selectedServer = servers.indexOf(c.key);
         await _save();
-        return _start(c.key.name, cfg, dnsOnly: false);
+        // ⚠️ await اینجا اضافه شد تا warning رفع شود
+        return await _start(c.key.name, cfg, dnsOnly: false);
       } catch (_) {}
     }
     return 'هیچ سرور سالمی پیدا نشد. جستجو کنید.';
@@ -893,11 +931,12 @@ class AppController extends ChangeNotifier {
 
   Future<void> _autoConnectFlow() async {
     if (connected || busy) return;
-    // اگه سرور سالمی نداریم، اول جستجو
     if (smartSelect && _findBestServer() == null) {
       await findServers();
     }
-    if (smartSelect) await smartSelectBest();
+    if (smartSelect) {
+      await smartSelectBest();
+    }
     final err = await toggle();
     if (err != null && smartSelect && mounted) {
       await findServers();
@@ -986,7 +1025,9 @@ class AppController extends ChangeNotifier {
 
   Future<void> pingAll() async {
     await Future.wait(servers.map(pingServer));
-    if (smartSelect) await smartSelectBest();
+    if (smartSelect) {
+      await smartSelectBest();
+    }
   }
 
   bool get hasFailed => pings.values.any((v) => v == -1);
@@ -1165,7 +1206,6 @@ class AppController extends ChangeNotifier {
       pool.shuffle(rnd);
       final cand = pool.take(400).toList();
 
-      // مرحله ۱: TCP reachability
       final alive = <String>[];
       final unreachable = <String>[];
       final unknown = <String>[];
@@ -1194,7 +1234,6 @@ class AppController extends ChangeNotifier {
         done += chunk.length;
       }
 
-      // مرحله ۲: تست واقعی
       final testList = [...alive, ...unknown].take(60).toList();
       final good = <MapEntry<ServerItem, int>>[];
       final failedTested = <String>[];
@@ -1247,9 +1286,8 @@ class AppController extends ChangeNotifier {
           servers.add(g.key);
           pings[g.key.link] = g.value;
         }
-        // انتخاب هوشمند: سریع‌ترین
         if (smartSelect) {
-          selectedServer = startIdx; // good sorted by ping
+          selectedServer = startIdx;
         } else if (!connected) {
           selectedServer = startIdx;
         }
@@ -1258,8 +1296,7 @@ class AppController extends ChangeNotifier {
             '${good.length} سرور سالم اضافه شد • سریع‌ترین: ${good.first.value} ms'
             '${smartSelect ? " • انتخاب شد" : ""}';
         if (pendingBad.isNotEmpty) {
-          findStatus +=
-              '\nهمچنین ${pendingBad.length} سرور ناسالم پیدا شد.';
+          findStatus += '\nهمچنین ${pendingBad.length} سرور ناسالم پیدا شد.';
         }
       } else if (_cancelFind) {
         findStatus = 'جستجو متوقف شد.';
@@ -1349,7 +1386,7 @@ class AppController extends ChangeNotifier {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  SameniApp - با پشتیبانی کامل از تغییر تم
+//  SameniApp
 // ═══════════════════════════════════════════════════════════════════════════
 class SameniApp extends StatefulWidget {
   const SameniApp({super.key});
@@ -1610,7 +1647,7 @@ class BottomBar extends StatelessWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  پس‌زمینه (بدون تغییر)
+//  پس‌زمینه
 // ═══════════════════════════════════════════════════════════════════════════
 class AuroraBackground extends StatefulWidget {
   const AuroraBackground({super.key});
@@ -1765,8 +1802,9 @@ class _AppCardState extends State<AppCard> {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
               color: b ?? Colors.white10, width: b != null ? 1.6 : 1),
-          boxShadow:
-              b != null ? [BoxShadow(color: b.withOpacity(0.22), blurRadius: 18)] : const [],
+          boxShadow: b != null
+              ? [BoxShadow(color: b.withOpacity(0.22), blurRadius: 18)]
+              : const [],
         ),
         child: Material(
           color: Colors.transparent,
@@ -1994,8 +2032,8 @@ class _SplashScreenState extends State<SplashScreen>
                       begin: const Offset(0, 0.4), end: Offset.zero)
                   .animate(CurvedAnimation(
                       parent: _in,
-                      curve: const Interval(0.45, 1,
-                          curve: Curves.easeOutCubic))),
+                      curve:
+                          const Interval(0.45, 1, curve: Curves.easeOutCubic))),
               child: const Column(
                 children: [
                   GradientText('SAMENI VPN', size: 30, spacing: 4),
@@ -2549,7 +2587,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        // ═══ کارت انتخاب هوشمند ═══
         Reveal(
           index: 1,
           child: Center(
@@ -2576,7 +2613,11 @@ class HomePage extends StatelessWidget {
                     width: c.smartSelect ? 1.5 : 1,
                   ),
                   boxShadow: c.smartSelect
-                      ? [BoxShadow(color: kAccent.withOpacity(0.25), blurRadius: 12)]
+                      ? [
+                          BoxShadow(
+                              color: kAccent.withOpacity(0.25),
+                              blurRadius: 12)
+                        ]
                       : const [],
                 ),
                 child: Row(
@@ -2672,7 +2713,8 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Icon(Icons.data_usage, size: 14, color: Colors.white38),
+                    const Icon(Icons.data_usage,
+                        size: 14, color: Colors.white38),
                     const SizedBox(width: 6),
                     Text(
                       'کل مصرف: ↓${fmtBytes(c.totalDown)}  ↑${fmtBytes(c.totalUp)}',
@@ -2849,7 +2891,9 @@ class ServersPage extends StatelessWidget {
                       onPressed: () async {
                         final n = await c.addServers(tc.text);
                         if (ctx.mounted) Navigator.pop(ctx);
-                        toast(n > 0 ? '$n سرور اضافه شد' : 'لینک معتبری پیدا نشد');
+                        toast(n > 0
+                            ? '$n سرور اضافه شد'
+                            : 'لینک معتبری پیدا نشد');
                       },
                       icon: const Icon(Icons.add),
                       label: const Text('افزودن'),
@@ -3170,7 +3214,11 @@ class _DnsPageState extends State<DnsPage> {
                   shape: BoxShape.circle,
                   color: kAccent2.withOpacity(active ? 0.3 : 0.12),
                   boxShadow: active
-                      ? [BoxShadow(color: kAccent2.withOpacity(0.5), blurRadius: 18)]
+                      ? [
+                          BoxShadow(
+                              color: kAccent2.withOpacity(0.5),
+                              blurRadius: 18)
+                        ]
                       : const [],
                 ),
                 child: const Icon(Icons.travel_explore, color: kAccent2),
@@ -3358,7 +3406,7 @@ class _DnsPageState extends State<DnsPage> {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//  SettingsPage - کامل
+//  SettingsPage
 // ═══════════════════════════════════════════════════════════════════════════
 class SettingsPage extends StatelessWidget {
   final AppController c;
@@ -3529,7 +3577,6 @@ class SettingsPage extends StatelessWidget {
               subtitle: 'شخصی‌سازی رفتار برنامه و اتصال'),
         ),
 
-        // ── هوشمندی ──
         Reveal(index: i++, child: _section('✨ هوشمندی')),
         Reveal(
           index: i++,
@@ -3573,7 +3620,6 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
 
-        // ── ظاهر ──
         Reveal(index: i++, child: _section('🎨 ظاهر')),
         Reveal(
           index: i++,
@@ -3602,7 +3648,6 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
 
-        // ── شبکه ──
         Reveal(index: i++, child: _section('🌐 شبکه و مسیریابی')),
         Reveal(
           index: i++,
@@ -3619,8 +3664,7 @@ class SettingsPage extends StatelessWidget {
           child: _switchTile(
             icon: Icons.lock_outline,
             title: 'Kill Switch',
-            subtitle:
-                'اگر VPN قطع شد، اینترنت هم قطع می‌ماند (بدون نشتی)',
+            subtitle: 'اگر VPN قطع شد، اینترنت هم قطع می‌ماند (بدون نشتی)',
             value: c.killSwitch,
             onChanged: c.setKillSwitch,
           ),
@@ -3691,7 +3735,6 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
 
-        // ── داده‌ها ──
         Reveal(index: i++, child: _section('💾 داده‌ها')),
         Reveal(
           index: i++,
@@ -3820,7 +3863,6 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
 
-        // ── درباره ──
         Reveal(index: i++, child: _section('ℹ️ درباره')),
         Reveal(
           index: i++,
