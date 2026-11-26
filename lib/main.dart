@@ -120,7 +120,7 @@ final List<DnsPreset> kDefaultDns = [
 class ServerItem {
   final String name;
   final String link;
-  ServerItem(this.name, this.link);
+  const ServerItem(this.name, this.link);
 }
 
 // ───────────────────────── سرورهای پیش‌فرض ─────────────────────────
