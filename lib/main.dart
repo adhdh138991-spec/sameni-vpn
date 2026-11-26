@@ -166,14 +166,58 @@ String normalizeDigits(String s) {
 }
 
 bool validDns(String v) {
-  final ip4 = RegExp(
-      r'^((25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(25[0-5]|2[0-4]\d|1?\d?\d)$');
-  final ip6 = RegExp(r'^[0-9a-fA-F:]{3,39}$');
-  if (ip4.hasMatch(v)) return true;
-  if (v.contains(':') && !v.contains('/') && ip6.hasMatch(v)) return true;
-  if (v.startsWith('https://') && v.length > 12 && !v.contains(' ')) {
+  final s = v.trim();
+  if (s.isEmpty) return false;
+
+  // IPv4
+  if (RegExp(
+          r'^((25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(25[0-5]|2[0-4]\d|1?\d?\d)$')
+      .hasMatch(s)) {
     return true;
   }
+
+  // IPv6
+  if (s.contains(':')) {
+    // CIDR رد بشه
+    if (s.contains('/')) return false;
+    // فقط کاراکترهای مجاز
+    if (!RegExp(r'^[0-9a-fA-F:]+$').hasMatch(s)) return false;
+    // :: حداکثر یک بار
+    if (RegExp(r'::.*::').hasMatch(s)) return false;
+    // ::: یا بیشتر نامعتبره
+    if (s.contains(':::')) return false;
+    // شروع یا پایان با تک کولون
+    if (s.startsWith(':') && !s.startsWith('::')) return false;
+    if (s.endsWith(':') && !s.endsWith('::')) return false;
+
+    if (s.contains('::')) {
+      // فرم فشرده: ۱ تا ۷ گروه
+      final p = s.split('::');
+      if (p.length != 2) return false;
+      final l = p[0].isEmpty ? <String>[] : p[0].split(':');
+      final r = p[1].isEmpty ? <String>[] : p[1].split(':');
+      if (l.length + r.length > 7) return false;
+      for (final x in [...l, ...r]) {
+        if (x.isEmpty || x.length > 4) return false;
+        if (!RegExp(r'^[0-9a-fA-F]+$').hasMatch(x)) return false;
+      }
+    } else {
+      // فرم کامل: دقیقاً ۸ گروه
+      final p = s.split(':');
+      if (p.length != 8) return false;
+      for (final x in p) {
+        if (x.isEmpty || x.length > 4) return false;
+        if (!RegExp(r'^[0-9a-fA-F]+$').hasMatch(x)) return false;
+      }
+    }
+    return true;
+  }
+
+  // DoH: فقط HTTPS (HTTP ناامن رد می‌شه)
+  if (s.startsWith('https://') && s.length > 12 && !s.contains(' ')) {
+    return true;
+  }
+
   return false;
 }
 
